@@ -1,0 +1,63 @@
+import random
+import os
+
+def limpiar_pantalla():
+    """Limpia la terminal según el sistema operativo."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def obtener_dificultad():
+    """Permite elegir el nivel de dificultad."""
+    print("Selecciona la dificultad:")
+    print("1. Fácil (1-50, 10 intentos)")
+    print("2. Medio (1-100, 7 intentos)")
+    print("3. Difícil (1-500, 5 intentos)")
+    
+    while True:
+        opcion = input("Elige una opción (1-3): ")
+        if opcion in ['1', '2', '3']:
+            config = {'1': (50, 10), '2': (100, 7), '3': (500, 5)}
+            return config[opcion]
+        print("Opción no válida, intenta de nuevo.")
+
+def jugar():
+    limpiar_pantalla()
+    print("=== BIENVENIDO AL JUEGO: ADIVINA EL NÚMERO ===")
+    
+    while True:
+        rango_max, max_intentos = obtener_dificultad()
+        numero_secreto = random.randint(1, rango_max)
+        intentos_realizados = 0
+        ganado = False
+        
+        print(f"\n¡He pensado un número entre 1 y {rango_max}!")
+        
+        while intentos_realizados < max_intentos:
+            entrada = input(f"Intento {intentos_realizados + 1}/{max_intentos}. ¿Cuál es tu apuesta?: ")
+            
+            if not entrada.isdigit():
+                print("⚠️ Error: Debes ingresar un número entero.")
+                continue
+            
+            intento = int(entrada)
+            intentos_realizados += 1
+            
+            if intento < numero_secreto:
+                print("🔼 El número secreto es MÁS ALTO.")
+            elif intento > numero_secreto:
+                print("🔽 El número secreto es MÁS BAJO.")
+            else:
+                print(f"🎉 ¡FELICIDADES! Has adivinado en {intentos_realizados} intentos.")
+                ganado = True
+                break
+        
+        if not ganado:
+            print(f"💀 ¡Se acabaron tus intentos! El número era: {numero_secreto}")
+            
+        if input("\n¿Quieres jugar otra vez? (s/n): ").lower() != 's':
+            print("¡Gracias por jugar! Adiós.")
+            break
+        limpiar_pantalla()
+
+if __name__ == "__main__":
+    jugar()
+                                                
